@@ -9,7 +9,7 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   // =============================AQUI COLOCAS EL ARCHIVO 3D =============================
-  modelPath: '/src/assets/images/pc.glb', // <------- AQUI COLOCAS EL ARCHIVO 3D
+  modelPath: '/models/pc.glb', // <------- AQUI COLOCAS EL ARCHIVO 3D
   // =============================AQUI COLOCAS EL ARCHIVO 3D =============================
 })
 
