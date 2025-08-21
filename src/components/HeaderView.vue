@@ -173,23 +173,23 @@ onUnmounted(() => {
             active-class="text-primary-purple bg-purple-50"
             @click="isMobileMenuOpen = false"
           >
-            Home
+            Inicio
           </router-link>
           <router-link
-            to="/rifas"
+            to="/portfolio"
             class="text-gray-700 hover:text-primary-purple hover:bg-gray-50 block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
             active-class="text-primary-purple bg-purple-50"
             @click="isMobileMenuOpen = false"
           >
-            Rifas
+            Portfolio
           </router-link>
           <router-link
-            to="/explore"
+            to="/services"
             class="text-gray-700 hover:text-primary-purple hover:bg-gray-50 block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200"
             active-class="text-primary-purple bg-purple-50"
             @click="isMobileMenuOpen = false"
           >
-            Explore
+            Servicios
           </router-link>
           <router-link
             to="/about"
@@ -197,13 +197,13 @@ onUnmounted(() => {
             active-class="text-primary-purple bg-purple-50"
             @click="isMobileMenuOpen = false"
           >
-            About Us
+            Acerca de
           </router-link>
           <div class="pt-4">
             <button
-              class="w-full bg-primary-purple cursor-pointer hover:bg-purple-600 text-primary-navy px-4 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 shadow-sm"
+              class="w-full bg-primary-purple cursor-pointer hover:bg-purple-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 shadow-sm"
             >
-              Crear Rifa
+              Contactar
             </button>
           </div>
         </div>
