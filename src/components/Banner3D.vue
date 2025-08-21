@@ -17,6 +17,10 @@ const props = withDefaults(defineProps<Props>(), {
 const containerRef = ref<HTMLDivElement>()
 const canvasRef = ref<HTMLCanvasElement>()
 
+// Estado de loading
+const isLoading = ref(true)
+const loadingProgress = ref(0)
+
 // Variables de Three.js
 let scene: THREE.Scene
 let camera: THREE.PerspectiveCamera
@@ -92,6 +96,10 @@ const setupLighting = () => {
 // Crear modelo 3D
 const createModel = async () => {
   try {
+    // Iniciar loading
+    isLoading.value = true
+    loadingProgress.value = 0
+
     // Crear un grupo para el modelo
     model = new THREE.Group()
 
@@ -107,6 +115,7 @@ const createModel = async () => {
     // Configurar timeout más largo para archivos grandes
     const timeout = setTimeout(() => {
       console.error('Timeout cargando el modelo:', props.modelPath)
+      isLoading.value = false
       createFallbackModel()
     }, 60000) // 60 segundos de timeout para archivos grandes
 
@@ -114,6 +123,10 @@ const createModel = async () => {
       props.modelPath,
       (gltf: { scene: THREE.Group }) => {
         clearTimeout(timeout)
+        // Finalizar loading
+        isLoading.value = false
+        loadingProgress.value = 100
+
         // Agregar el modelo cargado al grupo
         model.add(gltf.scene)
 
@@ -147,12 +160,14 @@ const createModel = async () => {
       },
       (progress: { loaded: number; total: number }) => {
         const percentage = (progress.loaded / progress.total) * 100
+        loadingProgress.value = percentage
         console.log(
           `Cargando modelo: ${percentage.toFixed(1)}% (${(progress.loaded / 1024 / 1024).toFixed(1)}MB / ${(progress.total / 1024 / 1024).toFixed(1)}MB)`,
         )
       },
       (error: Error) => {
         clearTimeout(timeout)
+        isLoading.value = false
         console.error('Error cargando el modelo:', error)
         console.error('Ruta del modelo:', props.modelPath)
         // Fallback: crear un cubo si falla la carga
@@ -160,6 +175,7 @@ const createModel = async () => {
       },
     )
   } catch (error) {
+    isLoading.value = false
     console.error('Error importando GLTFLoader:', error)
     createFallbackModel()
   }
@@ -279,6 +295,10 @@ const getFileName = (path: string) => {
 
 // Función para recargar el visor
 const reloadViewer = () => {
+  // Mostrar loading
+  isLoading.value = true
+  loadingProgress.value = 0
+
   // Limpiar recursos existentes
   if (animationId) {
     cancelAnimationFrame(animationId)
@@ -337,6 +357,38 @@ onUnmounted(() => {
       <div
         class="relative w-[90vw] max-w-[1400px] h-[85vh] mx-auto rounded-2xl border border-gray-200"
       >
+        <!-- Loading overlay -->
+        <div
+          v-if="isLoading"
+          class="absolute inset-0 bg-white/90 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center z-20"
+        >
+          <div class="text-center space-y-3">
+            <!-- Spinner -->
+            <div class="relative flex justify-center">
+              <div
+                class="w-12 h-12 border-3 border-gray-200 border-t-purple-600 rounded-full animate-spin"
+              ></div>
+            </div>
+
+            <!-- Texto de loading -->
+            <div class="space-y-1">
+              <h3 class="text-base font-medium text-gray-800">Cargando modelo 3D...</h3>
+              <p class="text-xs text-gray-600">Por favor espera un momento</p>
+            </div>
+
+            <!-- Barra de progreso -->
+            <div class="w-48 bg-gray-200 rounded-full h-1.5">
+              <div
+                class="bg-purple-600 h-1.5 rounded-full transition-all duration-300 ease-out"
+                :style="{ width: `${loadingProgress}%` }"
+              ></div>
+            </div>
+
+            <!-- Porcentaje -->
+            <p class="text-xs font-medium text-gray-700">{{ loadingProgress.toFixed(0) }}%</p>
+          </div>
+        </div>
+
         <div ref="containerRef" class="relative w-full h-full">
           <canvas
             ref="canvasRef"
