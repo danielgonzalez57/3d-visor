@@ -1,0 +1,99 @@
+@import 'tailwindcss';
+
+/* Import the default theme variables from Flowbite */
+@import 'flowbite/src/themes/default';
+
+/* Import the Flowbite plugin file */
+@plugin "flowbite/plugin";
+
+/* Configure the source files of Flowbite */
+@source "../node_modules/flowbite";
+
+/* ===== VARIABLES DE COLORES PERSONALIZADOS ===== */
+:root {
+  /* Colores principales de la marca */
+  --color-primary-purple: #8b5cf6;
+  --color-primary-navy: #1e293b;
+
+  /* Tonalidades del morado principal */
+  --color-purple-50: #faf5ff;
+  --color-purple-100: #f3e8ff;
+  --color-purple-200: #e9d5ff;
+  --color-purple-300: #d8b4fe;
+  --color-purple-400: #c084fc;
+  --color-purple-500: #a855f7;
+  --color-purple-600: #8b5cf6;
+  --color-purple-700: #7c3aed;
+  --color-purple-800: #6d28d9;
+  --color-purple-900: #5b21b6;
+
+  /* Tonalidades del azul marino */
+  --color-navy-50: #eff6ff;
+  --color-navy-100: #dbeafe;
+  --color-navy-200: #bfdbfe;
+  --color-navy-300: #93c5fd;
+  --color-navy-400: #60a5fa;
+  --color-navy-500: #3b82f6;
+  --color-navy-600: #2563eb;
+  --color-navy-700: #1d4ed8;
+  --color-navy-800: #1e40af;
+  --color-navy-900: #1e3a8a;
+
+  /* Colores de estado usando la paleta */
+  --color-success: #10b981;
+  --color-warning: var(--color-primary-purple);
+  --color-error: #ef4444;
+  --color-info: var(--color-primary-navy);
+}
+
+/* Configuración de fuente base - Open Sans */
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* También puedes configurar estilos base adicionales */
+* {
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* ===== CLASES UTILITY PERSONALIZADAS ===== */
+.bg-primary-purple {
+  background-color: var(--color-primary-purple);
+}
+
+.bg-primary-navy {
+  background-color: var(--color-primary-navy);
+}
+
+.text-primary-purple {
+  color: var(--color-primary-purple);
+}
+
+.text-primary-navy {
+  color: var(--color-primary-navy);
+}
+
+.border-primary-purple {
+  border-color: var(--color-primary-purple);
+}
+
+.border-primary-navy {
+  border-color: var(--color-primary-navy);
+}
+
+/* Hover states */
+.hover\:bg-primary-purple:hover {
+  background-color: var(--color-purple-600);
+}
+
+.hover\:bg-primary-navy:hover {
+  background-color: var(--color-navy-800);
+}
+
+.hover\:text-primary-purple:hover {
+  color: var(--color-primary-purple);
+}
+
+.hover\:text-primary-navy:hover {
+  color: var(--color-primary-navy);
+}
