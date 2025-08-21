@@ -95,13 +95,25 @@ const createModel = async () => {
     // Crear un grupo para el modelo
     model = new THREE.Group()
 
+    // Verificar si es un archivo grande y mostrar advertencia
+    if (props.modelPath.includes('lobby.glb')) {
+      console.warn('⚠️ Cargando archivo grande (28MB). Esto puede tomar tiempo...')
+    }
+
     // Cargar el modelo GLB
     const { GLTFLoader } = await import('three/examples/jsm/loaders/GLTFLoader')
     const loader = new GLTFLoader()
 
+    // Configurar timeout más largo para archivos grandes
+    const timeout = setTimeout(() => {
+      console.error('Timeout cargando el modelo:', props.modelPath)
+      createFallbackModel()
+    }, 60000) // 60 segundos de timeout para archivos grandes
+
     loader.load(
       props.modelPath,
       (gltf: { scene: THREE.Group }) => {
+        clearTimeout(timeout)
         // Agregar el modelo cargado al grupo
         model.add(gltf.scene)
 
@@ -115,20 +127,34 @@ const createModel = async () => {
 
         // Escalar el modelo para que sea más grande
         const maxDim = Math.max(size.x, size.y, size.z) || 1
-        const scale = 8.5 / maxDim
+        // Escalar diferente según el modelo
+        let scale = 8.5 / maxDim
+        if (props.modelPath.includes('lobby.glb')) {
+          scale = 3.0 / maxDim // Escala más pequeña para lobby por ser grande
+        }
         model.scale.setScalar(scale)
 
         // Ajustar posición para centrarlo mejor
-        model.position.set(0, -2.5, 0) // Bajado más en Y para centrarlo mejor
+        if (props.modelPath.includes('lobby.glb')) {
+          model.position.set(0, -1.0, 0) // Posición diferente para lobby
+        } else {
+          model.position.set(0, -2.5, 0) // Bajado más en Y para centrarlo mejor
+        }
 
         // Agregar el modelo a la escena
         scene.add(model)
+        console.log('Modelo cargado exitosamente:', props.modelPath)
       },
       (progress: { loaded: number; total: number }) => {
-        console.log('Cargando modelo:', (progress.loaded / progress.total) * 100 + '%')
+        const percentage = (progress.loaded / progress.total) * 100
+        console.log(
+          `Cargando modelo: ${percentage.toFixed(1)}% (${(progress.loaded / 1024 / 1024).toFixed(1)}MB / ${(progress.total / 1024 / 1024).toFixed(1)}MB)`,
+        )
       },
       (error: Error) => {
+        clearTimeout(timeout)
         console.error('Error cargando el modelo:', error)
+        console.error('Ruta del modelo:', props.modelPath)
         // Fallback: crear un cubo si falla la carga
         createFallbackModel()
       },
